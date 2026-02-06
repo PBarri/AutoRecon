@@ -9,6 +9,15 @@ help = 'A wordlist of passwords, useful for bruteforcing. Default: %(default)s'
 [global.domain]
 help = 'The domain to use (if known). Used for DNS and/or Active Directory. Default: %(default)s'
 
+[global.username]
+help = 'The username to use (if known). Used for assumed-breach scenarios. Default: %(default)s'
+
+[global.password]
+help = 'The password to use (if known). Used for assumed-breach scenarios. Default: %(default)s'
+
+[global.hash]
+help = 'The hash to use (if known). Used for assumed-breach scenarios. Default: %(default)s'
+
 # Configure global pattern matching here.
 [[pattern]]
 description = 'Nmap script found a potential vulnerability. ({match})'

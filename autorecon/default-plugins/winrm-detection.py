@@ -17,13 +17,26 @@ class WinRMDetection(ServiceScan):
 		with open(filename, mode='wt', encoding='utf8') as winrm:
 			winrm.write('WinRM was possibly detected running on ' + service.protocol + ' port ' + str(service.port) + '.\nCheck _manual_commands.txt for manual commands you can run against this service.')
 
+		if self.get_global('username') and (self.get_global('password') or self.get_global('hash')):
+			cmd = 'netexec winrm {address} -u "' + self.get_global('username') + '"'
+			if self.get_global('password'):
+				cmd += ' -p "' + self.get_global('password') + '"'
+			elif self.get_global('hash'):
+				cmd += ' -H "' + self.get_global('hash') + '"'
+			
+			if self.get_global('domain'):
+				cmd += ' -d "' + self.get_global('domain') + '"'
+			
+			await service.execute(cmd)
+
 	def manual(self, service, plugin_was_run):
-		service.add_manual_commands('Bruteforce logins:', [
-			'crackmapexec winrm {address} -d \'' + self.get_global('domain', default='<domain>') + '\' -u \'' + self.get_global('username_wordlist', default='/usr/share/seclists/Usernames/top-usernames-shortlist.txt') + '\' -p \'' + self.get_global('password_wordlist', default='/usr/share/seclists/Passwords/darkweb2017-top100.txt') + '\''
-		])
+		if not (self.get_global('username') and (self.get_global('password') or self.get_global('hash'))):
+			service.add_manual_commands('Bruteforce logins:', [
+				'netexec winrm {address} -d \'' + self.get_global('domain', default='<domain>') + '\' -u \'' + self.get_global('username_wordlist', default='/usr/share/seclists/Usernames/top-usernames-shortlist.txt') + '\' -p \'' + self.get_global('password_wordlist', default='/usr/share/seclists/Passwords/darkweb2017-top100.txt') + '\''
+			])
 
 		service.add_manual_commands('Check login (requires credentials):', [
-			'crackmapexec winrm {address} -d \'' + self.get_global('domain', default='<domain>') + '\' -u \'<username>\' -p \'<password>\''
+			'netexec winrm {address} -d \'' + self.get_global('domain', default='<domain>') + '\' -u \'<username>\' -p \'<password>\''
 		])
 
 		service.add_manual_commands('Evil WinRM (gem install evil-winrm):', [

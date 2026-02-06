@@ -12,6 +12,6 @@ class NmapKerberos(ServiceScan):
 
 	async def run(self, service):
 		if self.get_global('domain') and self.get_global('username-wordlist'):
-			await service.execute('nmap {nmap_extra} -sV -p {port} --script="banner,krb5-enum-users" --script-args krb5-enum-users.realm="' + self.get_global('domain') + '",userdb="' + self.get_global('username-wordlist') + '" -oN "{scandir}/{protocol}_{port}_kerberos_nmap.txt" -oX "{scandir}/xml/{protocol}_{port}_kerberos_nmap.xml" {address}')
+			await service.execute('nmap {nmap_extra} -sV -p {port} --script="banner,krb5-enum-users" --script-args krb5-enum-users.realm="' + self.get_global('domain') + '",userdb="' + self.get_global('username-wordlist') + '" -oA "{scandir}/{protocol}_{port}_kerberos_nmap" {address}')
 		else:
-			await service.execute('nmap {nmap_extra} -sV -p {port} --script="banner,krb5-enum-users" -oN "{scandir}/{protocol}_{port}_kerberos_nmap.txt" -oX "{scandir}/xml/{protocol}_{port}_kerberos_nmap.xml" {address}')
+			await service.execute('nmap {nmap_extra} -sV -p {port} --script="banner,krb5-enum-users" -oA "{scandir}/{protocol}_{port}_kerberos_nmap" {address}')

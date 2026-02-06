@@ -29,6 +29,14 @@ class Enum4Linux(ServiceScan):
 			tool = self.get_option('tool')
 			if tool is not None:
 				if tool == 'enum4linux':
-					await service.execute('enum4linux -a -M -l -d {address} 2>&1', outfile='enum4linux.txt')
+					cmd = 'enum4linux -a -M -l -d {address}'
+					if self.get_global('username') and self.get_global('password'):
+						cmd += ' -u "' + self.get_global('username') + '" -p "' + self.get_global('password') + '"'
+					await service.execute(cmd + ' 2>&1', outfile='enum4linux.txt')
 				elif tool == 'enum4linux-ng':
-					await service.execute('enum4linux-ng -A -d -v {address} 2>&1', outfile='enum4linux-ng.txt')
+					cmd = 'enum4linux-ng -A -d -v {address}'
+					if self.get_global('username') and self.get_global('password'):
+						cmd += ' -u "' + self.get_global('username') + '" -p "' + self.get_global('password') + '"'
+					elif self.get_global('username') and self.get_global('hash'):
+						cmd += ' -u "' + self.get_global('username') + '" -H "' + self.get_global('hash') + '"'
+					await service.execute(cmd + ' 2>&1', outfile='enum4linux-ng.txt')

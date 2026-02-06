@@ -14,4 +14,4 @@ class NmapHTTP(ServiceScan):
 		self.add_pattern('WebDAV is ENABLED', description='WebDAV is enabled')
 
 	async def run(self, service):
-		await service.execute('nmap {nmap_extra} -sV -p {port} --script="banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)" -oN "{scandir}/{protocol}_{port}_{http_scheme}_nmap.txt" -oX "{scandir}/xml/{protocol}_{port}_{http_scheme}_nmap.xml" {address}')
+		await service.execute('nmap {nmap_extra} -sV -p {port} --script="banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)" -oA "{scandir}/{protocol}_{port}_{http_scheme}_nmap" {address}')
