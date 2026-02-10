@@ -34,7 +34,7 @@ class SMBMap(ServiceScan):
 				await service.execute('smbmap -u null -p "" -H {address} -P {port} -x "ipconfig /all" 2>&1', outfile='smbmap-execute-command.txt')
 
 	def manual(self, service, plugin_was_run):
-		if self.get_global('username') and (self.get_global('password') or self.get_global('hash')):
+		if not self.get_global('username') or not (self.get_global('password') or self.get_global('hash')):
 			service.add_manual_command('Try authenticated scan. Requires credentials', [
 				'smbmap -H {address} -P {port} -u <username> -p <password>  2>&1 | tee {scandir}/smbmap-share-permissions.txt'
 			])
